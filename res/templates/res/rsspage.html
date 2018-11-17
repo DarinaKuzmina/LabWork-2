@@ -1,0 +1,92 @@
+{% load static %}
+
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="{% static 'css/uikit.min.css' %}">
+		<link rel="stylesheet" href="{% static 'css/main.css' %}">
+		<script src="{% static 'js/uikit.min.js' %}"></script>
+		<script src="{% static 'js/uikit-icons.min.js' %}"></script>   
+	</head>
+
+
+
+	<body>
+		 <div class="uk-height-small uk-flex-center uk-background-cover " data-src="{% static 'img/im2.jpg' %}" uk-img>
+			<h1 class="uk-heading-hero uk-text-bold uk-text-left uk-text-middle">RSS feed</h1>
+		</div>
+		<div uk-grid>
+			<div class="uk-width-1-4 uk-text-center">
+				<form action="{% url 'res:add_categorie' %}" method="post">{% csrf_token %}
+					<fieldset class="uk-fieldset">
+						<ul class="uk-thumbnav" uk-margin>
+							<input class="uk-input uk-width-2-3 " type="text" name="title" placeholder="Новая категория">
+							<button class="uk-button uk-button-default uk-width-1-3">Создать</button>
+						</ul>
+					</fieldset>
+				</form>
+				<form action="{% url 'res:add_rss' %}" method="post">{% csrf_token %}
+					<fieldset class="uk-fieldset">
+						<legend class="uk-legend uk-text-center">Создать новую Rss-летну</legend>
+						<div class="uk-margin">
+							<input class="uk-input" type="text" name="title" placeholder="Название">
+						</div>			
+						<div class="uk-width-expand@m uk-form-width-small ">
+							<select class="uk-select " name="categorie">
+								{% for categorie in categorie_list %}
+										<option value="{{ categorie.id }}">{{ categorie.title }}</option>
+								{% endfor %}
+							</select>
+						</div>
+						<div class="uk-margin">
+							<input class="uk-input" type="text" name="address" placeholder="Ссылка">
+						</div>
+						<div class="uk-margin">
+							<div class="uk-flex uk-flex-center">
+								<button class="uk-button uk-button-default">Создать</button>
+							</div>
+						</div>
+					</fieldset>
+				</form>
+				<form action="{% url 'res:logout' %}" method="post">{% csrf_token %}
+					<div class="uk-margin">
+						<div class="uk-flex uk-flex-center">
+							<button class="uk-button uk-button-secondary">Выход</button>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="uk-width-3-4">
+				<p class="uk-text-right">
+					<form class="uk-flex uk-flex-right" action="{% url 'res:firstpage' %}" method="post">{% csrf_token %}
+						<button class="uk-button uk-button-secondary">Назад</button>
+					</form>
+				</p>
+				<form action="{% url 'res:search2' rssId%}" method="post">{% csrf_token %}
+					<div class="uk-margin">
+						<button class="uk-search-icon-flip" uk-search-icon></button>
+						<input class="uk-search-input uk-width-1-3" type="text" name="search_title" placeholder="Поиск...">
+						<form action="{% url 'res:rssPage' rssId%}" method="post">{% csrf_token %}
+							<button class="uk-button uk-button-secondary">Все новости</button>
+						</form>
+        			</div>
+    			</form>
+				<ul uk-accordion="multiple: true">
+					{% for item in item_list %}
+					<li name="search-element">
+						<a class="uk-accordion-title" href="#"> {{ item.title }} </a>
+						<p class="uk-text-meta uk-margin-remove-top"><time datetime="{{ item.pubDate }}">{{ item.pubDate }}</time></p>
+						<div class="uk-accordion-content">
+							<p>{{ item.description }}</p>
+							<a href="{{ item.link }}" class="uk-button uk-button-text">Перейти к новости</a>
+						</div>
+					</li>
+					{% endfor %}
+				</ul>
+			</div>
+		</div>	
+	</body>
+</header>
+
+"https://lenta.ru/rss/news"
